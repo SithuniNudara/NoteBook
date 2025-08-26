@@ -1,104 +1,52 @@
 import React, { useState } from 'react';
-import * as ImagePicker from 'expo-image-picker';
-import { Alert, Button, Image, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { Picker } from '@react-native-picker/picker';
+import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 
 export default function SignUpScreen() {
-  const [image, setImage] = useState<string | null>(null);
-  const [selectedCity, setSelectedCity] = useState('');
-  const cities = ['Colombo', 'Anuradhapura', 'Matara', 'Galle', 'Kandy'];
 
-  const pickImage = async () => {
-
-    var result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ['images', 'videos'],
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-
-    console.log(result);
-
-    if (!result.canceled) {
-      setImage(result.assets[0].uri);
-    }
-  }
   return (
-    <SafeAreaView>
-      <ScrollView style={styles.container} contentContainerStyle={styles.scrollcontent}>
-        <View style={styles.header}>
-          <Text style={styles.pageTitle}>Create Account</Text>
-          <Text style={styles.subTitle}>Fill in the information below to create account</Text>
-        </View>
 
-        <View style={styles.form}>
-          {/* Image */}
-          <View style={styles.imageContainer} >
-            {/* Touch Function */}
-            <Pressable onPress={pickImage} style={styles.imageUploader}>
-              {image ? (
-                <Image source={{ uri: image }} style={styles.profileImage} />
-              ) : (
-                <View style={styles.imagePlaceholder}>
-                  <Text style={styles.imageText}>+</Text>
-                  <Text style={styles.imageLabel}>Add Image</Text>
-                </View>
-              )}
-            </Pressable>
-          </View>
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Full Name</Text>
-            <TextInput placeholder='Enter Your Full Name' style={styles.input} />
-          </View>
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>User Name</Text>
-            <TextInput placeholder='Enter Your User Name' style={styles.input} />
-          </View>
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Email</Text>
-            <TextInput placeholder='Enter Your Email' style={styles.input} keyboardType='email-address' />
-          </View>
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Password</Text>
-            <TextInput placeholder='Enter Your Password' style={styles.input} secureTextEntry />
-          </View>
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Confirm Password</Text>
-            <TextInput placeholder='Enter Your Confirm Password' style={styles.input} secureTextEntry />
-          </View>
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>City</Text>
-            {/* Drop Down */}
-            <View style={styles.pickerContainer}>
-              <Picker selectedValue={selectedCity} style={styles.picker} onValueChange={(itemValue => setSelectedCity(itemValue))}>
-                <Picker.Item label='Select Your City' value={""} />
-                {cities.map((city, index) => (
-                  <Picker.Item key={index} label={city} />
-                ))}
-              </Picker>
-            </View>
-          </View>
-          <View style={styles.buttonContainer}>
-            <Pressable style={styles.backButton}>
-              <Text style={styles.backButtonText}>Go Back</Text>
-            </Pressable>
-            <Pressable style={styles.saveButton}>
-              <Text style={styles.saveButtonText}>Save</Text>
-            </Pressable>
-          </View>
-        </View>
+    <ScrollView style={styles.container} contentContainerStyle={styles.scrollcontent}>
+      <View style={styles.round}>
+        <Text style={styles.roundText}>Hello</Text>
+      </View>
+      <View style={styles.header}>
+        <Text style={styles.pageTitle}>NoteBook </Text>
+        <Text style={styles.subTitle}>Welcome Back! Please Sign In to Your Account</Text>
+      </View>
 
-      </ScrollView>
-    </SafeAreaView>
+      <View style={styles.form}>
+
+        <View style={styles.inputContainer}>
+          <Text style={styles.label}>Email</Text>
+          <TextInput placeholder='Enter Your Email' style={styles.input} keyboardType='email-address' />
+        </View>
+        <View style={styles.inputContainer}>
+          <Text style={styles.label}>Password</Text>
+          <TextInput placeholder='Enter Your Password' style={styles.input} secureTextEntry />
+        </View>
+        <View style={styles.buttonContainer}>
+          <Pressable style={styles.loginButton}>
+            <Text style={styles.loginButtonText}>Login</Text>
+          </Pressable>
+        </View>
+        <View style={styles.buttonContainer}>
+          <Pressable style={styles.createAccountButton}>
+            <Text style={styles.createAccountButtonText}>Create Account</Text>
+          </Pressable>
+        </View>
+      </View>
+
+    </ScrollView>
+
 
   );
 }
 
 const styles = StyleSheet.create({
+
   container: {
-    //flex:1,
-    backgroundColor: "#fff",
+    flex: 1,
+    backgroundColor: "#eee",
   },
 
   scrollcontent: {
@@ -129,46 +77,6 @@ const styles = StyleSheet.create({
 
   },
 
-
-  imageContainer: {
-    alignItems: "center",
-    marginBottom: 30,
-  },
-
-  imageUploader: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
-    backgroundColor: "#f0f0f0",
-    justifyContent: "center",
-    alignItems: "center",
-    borderWidth: 2,
-    borderColor: "#3f3e3eff",
-    borderStyle: "dashed",
-  },
-
-  profileImage: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
-  },
-
-  imagePlaceholder: {
-    alignItems: "center",
-  },
-
-  imageText: {
-    fontSize: 36,
-    color: "#999999",
-    marginBottom: 5,
-  },
-
-  imageLabel: {
-    fontSize: 14,
-    color: "#666666",
-
-  },
-
   inputContainer: {
     marginBottom: 20,
   },
@@ -189,41 +97,31 @@ const styles = StyleSheet.create({
     backgroundColor: "#ffffff",
   },
 
-  pickerContainer: {
-    borderWidth: 1,
-    borderColor: '#3f3e3eff',
-    borderRadius: 8,
-    backgroundColor: '#ffffff',
-  },
-
-  picker: {
-    height: 50,
-  },
-
   buttonContainer: {
     flexDirection: "row",
-    justifyContent: "space-between",
-    marginTop: 20
+    justifyContent: "center",
+    marginTop: 20,
   },
 
-  backButton: {
-    flex: 0.45,
+  createAccountButton: {
+    flex: 1,
     backgroundColor: "transparent",
     paddingVertical: 15,
     borderRadius: 8,
     alignItems: "center",
     borderWidth: 2,
-    borderColor: "#3f3e3eff"
+    borderColor: "#54a0ff",
+  
   },
 
-  backButtonText: {
-    color: "#000",
+  createAccountButtonText: {
+    color:"#54a0ff",
     fontSize: 16,
     fontWeight: "bold"
   },
 
-  saveButton: {
-    flex: 0.45,
+  loginButton: {
+    flex: 1,
     backgroundColor: "#54a0ff",
     paddingVertical: 15,
     borderRadius: 8,
@@ -232,10 +130,31 @@ const styles = StyleSheet.create({
     borderColor: "#54a0ff"
   },
 
-  saveButtonText: {
+  loginButtonText: {
     color: "#fff",
     fontSize: 16,
     fontWeight: "bold"
-  }
+  },
+
+  round: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    backgroundColor: "#069ef1ff",
+    justifyContent: "center",
+    alignItems: "center",
+    borderWidth: 2,
+    borderColor: "#069ef1ff",
+    marginBottom: 20,    // space between circle and title
+    alignSelf: "center", // center circle
+  },
+
+  roundText: {
+    color: "#fff",
+    fontSize: 20,
+    fontWeight: "600",   // must be a string
+    textAlign: "center",
+  },
+
 
 });
