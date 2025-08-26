@@ -229,7 +229,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     alignItems: "center",
     borderWidth: 2,
-    borderColor: "#0971f0ff"
+    borderColor: "#54a0ff"
   },
 
   saveButtonText: {
