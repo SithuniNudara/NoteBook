@@ -79,8 +79,13 @@ export default function SignUpScreen() {
               </Picker>
             </View>
           </View>
-           <View style={styles.inputContainer}>
-              <Button title='Create Account'/>
+          <View style={styles.buttonContainer}>
+            <Pressable style={styles.backButton}>
+              <Text style={styles.backButtonText}>Go Back</Text>
+            </Pressable>
+            <Pressable style={styles.saveButton}>
+              <Text style={styles.saveButtonText}>Save</Text>
+            </Pressable>
           </View>
         </View>
 
@@ -193,6 +198,44 @@ const styles = StyleSheet.create({
 
   picker: {
     height: 50,
+  },
+
+  buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 20
+  },
+
+  backButton: {
+    flex: 0.45,
+    backgroundColor: "transparent",
+    paddingVertical: 15,
+    borderRadius: 8,
+    alignItems: "center",
+    borderWidth: 2,
+    borderColor: "#3f3e3eff"
+  },
+
+  backButtonText: {
+    color: "#000",
+    fontSize: 16,
+    fontWeight: "bold"
+  },
+
+  saveButton: {
+    flex: 0.45,
+    backgroundColor: "#54a0ff",
+    paddingVertical: 15,
+    borderRadius: 8,
+    alignItems: "center",
+    borderWidth: 2,
+    borderColor: "#0971f0ff"
+  },
+
+  saveButtonText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "bold"
   }
 
 });
