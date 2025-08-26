@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
 import * as ImagePicker from 'expo-image-picker';
-import { Alert, Button, Image, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Alert, Button, Image, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Picker } from '@react-native-picker/picker';
 
 export default function SignUpScreen() {
   const [image, setImage] = useState<string | null>(null);
+  const [selectedCity, setSelectedCity] = useState('');
+  const cities = ['Colombo', 'Anuradhapura', 'Matara', 'Galle', 'Kandy'];
 
   const pickImage = async () => {
-    // No permissions request is necessary for launching the image library
+
     var result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ['images', 'videos'],
       allowsEditing: true,
@@ -44,7 +47,43 @@ export default function SignUpScreen() {
               )}
             </Pressable>
           </View>
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>Full Name</Text>
+            <TextInput placeholder='Enter Your Full Name' style={styles.input} />
+          </View>
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>User Name</Text>
+            <TextInput placeholder='Enter Your User Name' style={styles.input} />
+          </View>
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>Email</Text>
+            <TextInput placeholder='Enter Your Email' style={styles.input} keyboardType='email-address' />
+          </View>
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>Password</Text>
+            <TextInput placeholder='Enter Your Password' style={styles.input} secureTextEntry />
+          </View>
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>Confirm Password</Text>
+            <TextInput placeholder='Enter Your Confirm Password' style={styles.input} secureTextEntry />
+          </View>
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>City</Text>
+            {/* Drop Down */}
+            <View style={styles.pickerContainer}>
+              <Picker selectedValue={selectedCity} style={styles.picker} onValueChange={(itemValue => setSelectedCity(itemValue))}>
+                <Picker.Item label='Select Your City' value={""} />
+                {cities.map((city, index) => (
+                  <Picker.Item key={index} label={city} />
+                ))}
+              </Picker>
+            </View>
+          </View>
+           <View style={styles.inputContainer}>
+              <Button title='Create Account'/>
+          </View>
         </View>
+
       </ScrollView>
     </SafeAreaView>
 
@@ -110,19 +149,50 @@ const styles = StyleSheet.create({
   },
 
   imagePlaceholder: {
-    alignItems: "center",  
+    alignItems: "center",
   },
 
   imageText: {
-    fontSize:36,
-    color:"#999999",
-    marginBottom:5,
+    fontSize: 36,
+    color: "#999999",
+    marginBottom: 5,
   },
 
   imageLabel: {
-    fontSize:14,
-    color:"#666666",
-    
+    fontSize: 14,
+    color: "#666666",
+
+  },
+
+  inputContainer: {
+    marginBottom: 20,
+  },
+
+  label: {
+    fontSize: 16,
+    fontWeight: 600,
+    color: "#000",
+    marginBottom: 8
+  },
+
+  input: {
+    borderWidth: 1,
+    borderColor: "#3f3e3eff",
+    borderRadius: 8,
+    padding: 12,
+    fontSize: 16,
+    backgroundColor: "#ffffff",
+  },
+
+  pickerContainer: {
+    borderWidth: 1,
+    borderColor: '#3f3e3eff',
+    borderRadius: 8,
+    backgroundColor: '#ffffff',
+  },
+
+  picker: {
+    height: 50,
   }
 
 });
