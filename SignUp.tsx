@@ -188,6 +188,15 @@ export default function SignUpScreen() {
                       title: 'Success',
                       textBody: 'Congrats! Account created successfully!',
                     });
+
+                    setFullName("");
+                    setUserName("");
+                    setEmail("");
+                    setPassword("");
+                    setConfirmPassword("");
+                    setSelectedCity("");
+                    setImage("");
+                 
                   } else {
                     Toast.show({
                       type: ALERT_TYPE.DANGER,
