@@ -1,13 +1,37 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import * as ImagePicker from 'expo-image-picker';
 import { Alert, Button, Image, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Picker } from '@react-native-picker/picker';
+import { ALERT_TYPE, AlertNotificationRoot, Toast } from 'react-native-alert-notification';
 
+const PUBLIC_URL = "https://576321d34d40.ngrok-free.app";
 export default function SignUpScreen() {
+
   const [image, setImage] = useState<string | null>(null);
   const [selectedCity, setSelectedCity] = useState('');
-  const cities = ['Colombo', 'Anuradhapura', 'Matara', 'Galle', 'Kandy'];
+  const [getCities, setCites] = React.useState<{ id: number; name: string }[]>(
+    []
+  );
+
+  useEffect(() => {
+    const loadCities = async () => {
+      const response = await fetch(PUBLIC_URL+"/NoteBook/Cities");
+
+      if (response.ok) {
+        const json = await response.json();
+        setCites(json);
+        console.log(json);
+      } else {
+        console.error("City data loading failed!")
+      }
+    }
+
+    loadCities();
+
+
+  }, []);
+
 
   const pickImage = async () => {
 
@@ -25,72 +49,84 @@ export default function SignUpScreen() {
     }
   }
   return (
-    <SafeAreaView>
-      <ScrollView style={styles.container} contentContainerStyle={styles.scrollcontent}>
-        <View style={styles.header}>
-          <Text style={styles.pageTitle}>Create Account</Text>
-          <Text style={styles.subTitle}>Fill in the information below to create account</Text>
-        </View>
+    <AlertNotificationRoot>
+      <SafeAreaView>
+        <ScrollView style={styles.container} contentContainerStyle={styles.scrollcontent}>
+          <View style={styles.header}>
+            <Text style={styles.pageTitle}>Create Account</Text>
+            <Text style={styles.subTitle}>Fill in the information below to create account</Text>
+          </View>
 
-        <View style={styles.form}>
-          {/* Image */}
-          <View style={styles.imageContainer} >
-            {/* Touch Function */}
-            <Pressable onPress={pickImage} style={styles.imageUploader}>
-              {image ? (
-                <Image source={{ uri: image }} style={styles.profileImage} />
-              ) : (
-                <View style={styles.imagePlaceholder}>
-                  <Text style={styles.imageText}>+</Text>
-                  <Text style={styles.imageLabel}>Add Image</Text>
-                </View>
-              )}
-            </Pressable>
-          </View>
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Full Name</Text>
-            <TextInput placeholder='Enter Your Full Name' style={styles.input} />
-          </View>
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>User Name</Text>
-            <TextInput placeholder='Enter Your User Name' style={styles.input} />
-          </View>
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Email</Text>
-            <TextInput placeholder='Enter Your Email' style={styles.input} keyboardType='email-address' />
-          </View>
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Password</Text>
-            <TextInput placeholder='Enter Your Password' style={styles.input} secureTextEntry />
-          </View>
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Confirm Password</Text>
-            <TextInput placeholder='Enter Your Confirm Password' style={styles.input} secureTextEntry />
-          </View>
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>City</Text>
-            {/* Drop Down */}
-            <View style={styles.pickerContainer}>
-              <Picker selectedValue={selectedCity} style={styles.picker} onValueChange={(itemValue => setSelectedCity(itemValue))}>
-                <Picker.Item label='Select Your City' value={""} />
-                {cities.map((city, index) => (
-                  <Picker.Item key={index} label={city} />
-                ))}
-              </Picker>
+          <View style={styles.form}>
+            {/* Image */}
+            <View style={styles.imageContainer} >
+              {/* Touch Function */}
+              <Pressable onPress={pickImage} style={styles.imageUploader}>
+                {image ? (
+                  <Image source={{ uri: image }} style={styles.profileImage} />
+                ) : (
+                  <View style={styles.imagePlaceholder}>
+                    <Text style={styles.imageText}>+</Text>
+                    <Text style={styles.imageLabel}>Add Image</Text>
+                  </View>
+                )}
+              </Pressable>
+            </View>
+            <View style={styles.inputContainer}>
+              <Text style={styles.label}>Full Name</Text>
+              <TextInput placeholder='Enter Your Full Name' style={styles.input} />
+            </View>
+            <View style={styles.inputContainer}>
+              <Text style={styles.label}>User Name</Text>
+              <TextInput placeholder='Enter Your User Name' style={styles.input} />
+            </View>
+            <View style={styles.inputContainer}>
+              <Text style={styles.label}>Email</Text>
+              <TextInput placeholder='Enter Your Email' style={styles.input} keyboardType='email-address' />
+            </View>
+            <View style={styles.inputContainer}>
+              <Text style={styles.label}>Password</Text>
+              <TextInput placeholder='Enter Your Password' style={styles.input} secureTextEntry />
+            </View>
+            <View style={styles.inputContainer}>
+              <Text style={styles.label}>Confirm Password</Text>
+              <TextInput placeholder='Enter Your Confirm Password' style={styles.input} secureTextEntry />
+            </View>
+            <View style={styles.inputContainer}>
+              <Text style={styles.label}>City</Text>
+              {/* Drop Down */}
+              <View style={styles.pickerContainer}>
+                <Picker 
+                selectedValue={selectedCity} 
+                style={styles.picker} 
+                onValueChange={(itemValue => setSelectedCity(itemValue))}>
+                  <Picker.Item label='Select Your City' value={""} />
+                  {getCities.map((city) => (
+                    <Picker.Item key={city.id} label={city.name} value={city.name} />
+                  ))}
+                </Picker>
+              </View>
+            </View> 
+            <View style={styles.buttonContainer}>
+              <Pressable style={styles.backButton}>
+                <Text style={styles.backButtonText}>Go Back</Text>
+              </Pressable>
+              <Pressable style={styles.saveButton}
+                onPress={() =>
+                  Toast.show({
+                    type: ALERT_TYPE.SUCCESS,
+                    title: 'Success',
+                    textBody: 'Congrats! this is toast notification success',
+                  })
+                }>
+                <Text style={styles.saveButtonText}>Save</Text>
+              </Pressable>
             </View>
           </View>
-          <View style={styles.buttonContainer}>
-            <Pressable style={styles.backButton}>
-              <Text style={styles.backButtonText}>Go Back</Text>
-            </Pressable>
-            <Pressable style={styles.saveButton}>
-              <Text style={styles.saveButtonText}>Save</Text>
-            </Pressable>
-          </View>
-        </View>
 
-      </ScrollView>
-    </SafeAreaView>
+        </ScrollView>
+      </SafeAreaView>
+    </AlertNotificationRoot>
 
   );
 }
