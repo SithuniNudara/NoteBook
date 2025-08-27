@@ -3,9 +3,9 @@ import * as ImagePicker from 'expo-image-picker';
 import { Alert, Button, Image, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Picker } from '@react-native-picker/picker';
-import { ALERT_TYPE, AlertNotificationRoot, Toast } from 'react-native-alert-notification';
+import { ALERT_TYPE, AlertNotificationRoot, Dialog, Toast } from 'react-native-alert-notification';
 
-const PUBLIC_URL = "https://576321d34d40.ngrok-free.app";
+const PUBLIC_URL = "https://dc65f3995d2a.ngrok-free.app";
 export default function SignUpScreen() {
 
   const [image, setImage] = useState<string | null>(null);
@@ -13,15 +13,19 @@ export default function SignUpScreen() {
   const [getCities, setCites] = React.useState<{ id: number; name: string }[]>(
     []
   );
+  const [getFullName, setFullName] = React.useState("");
+  const [getUserName, setUserName] = React.useState("");
+  const [getEmail, setEmail] = React.useState("");
+  const [getPassword, setPassword] = React.useState("");
+  const [getConfirmPassword, setConfirmPassword] = React.useState("");
 
   useEffect(() => {
     const loadCities = async () => {
-      const response = await fetch(PUBLIC_URL+"/NoteBook/Cities");
+      const response = await fetch(PUBLIC_URL + "/NoteBook/Cities");
 
       if (response.ok) {
         const json = await response.json();
         setCites(json);
-        console.log(json);
       } else {
         console.error("City data loading failed!")
       }
@@ -74,51 +78,124 @@ export default function SignUpScreen() {
             </View>
             <View style={styles.inputContainer}>
               <Text style={styles.label}>Full Name</Text>
-              <TextInput placeholder='Enter Your Full Name' style={styles.input} />
+              <TextInput
+                placeholder='Enter Your Full Name'
+                style={styles.input}
+                onChangeText={setFullName}
+                value={getFullName} />
             </View>
             <View style={styles.inputContainer}>
               <Text style={styles.label}>User Name</Text>
-              <TextInput placeholder='Enter Your User Name' style={styles.input} />
+              <TextInput
+                placeholder='Enter Your User Name'
+                style={styles.input}
+                onChangeText={setUserName}
+                value={getUserName}
+              />
             </View>
             <View style={styles.inputContainer}>
               <Text style={styles.label}>Email</Text>
-              <TextInput placeholder='Enter Your Email' style={styles.input} keyboardType='email-address' />
+              <TextInput
+                placeholder='Enter Your Email'
+                style={styles.input}
+                keyboardType='email-address'
+                onChangeText={setEmail}
+                value={getEmail} />
             </View>
             <View style={styles.inputContainer}>
               <Text style={styles.label}>Password</Text>
-              <TextInput placeholder='Enter Your Password' style={styles.input} secureTextEntry />
+              <TextInput
+                placeholder='Enter Your Password'
+                style={styles.input}
+                onChangeText={setPassword}
+                value={getPassword}
+                secureTextEntry />
             </View>
             <View style={styles.inputContainer}>
               <Text style={styles.label}>Confirm Password</Text>
-              <TextInput placeholder='Enter Your Confirm Password' style={styles.input} secureTextEntry />
+              <TextInput
+                placeholder='Enter Your Confirm Password'
+                style={styles.input}
+                onChangeText={setConfirmPassword}
+                value={getConfirmPassword}
+                secureTextEntry />
             </View>
             <View style={styles.inputContainer}>
               <Text style={styles.label}>City</Text>
               {/* Drop Down */}
               <View style={styles.pickerContainer}>
-                <Picker 
-                selectedValue={selectedCity} 
-                style={styles.picker} 
-                onValueChange={(itemValue => setSelectedCity(itemValue))}>
+                <Picker
+                  selectedValue={selectedCity}
+                  style={styles.picker}
+                  onValueChange={(itemValue => setSelectedCity(itemValue))}>
                   <Picker.Item label='Select Your City' value={""} />
                   {getCities.map((city) => (
-                    <Picker.Item key={city.id} label={city.name} value={city.name} />
+                    <Picker.Item key={city.id} label={city.name} value={city.id} />
                   ))}
                 </Picker>
               </View>
-            </View> 
+            </View>
             <View style={styles.buttonContainer}>
               <Pressable style={styles.backButton}>
                 <Text style={styles.backButtonText}>Go Back</Text>
               </Pressable>
               <Pressable style={styles.saveButton}
-                onPress={() =>
-                  Toast.show({
-                    type: ALERT_TYPE.SUCCESS,
-                    title: 'Success',
-                    textBody: 'Congrats! this is toast notification success',
-                  })
-                }>
+                onPress={async () => {
+                  if (
+                    !getFullName ||
+                    !getUserName ||
+                    !getEmail ||
+                    !getPassword ||
+                    !getConfirmPassword ||
+                    image == null ||
+                    !selectedCity
+                  ) {
+                    Toast.show({
+                      type: ALERT_TYPE.DANGER,
+                      title: 'Warning',
+                      textBody: 'Please Fill requied data',
+                    });
+                    return;
+                  }
+
+                  let formData = new FormData();
+                  formData.append("fullName", getFullName);
+                  formData.append("userName", getUserName);
+                  formData.append("email", getEmail);
+                  formData.append("password", getPassword);
+                  formData.append("confirmPassword", getConfirmPassword);
+                  formData.append("city", selectedCity);
+
+                  if (image) {
+                    formData.append("profileImage", {
+                      uri: image,
+                      name: "profile.jpg",
+                      type:"image/jpg"
+                    } as any);
+                  }
+
+                  const response = await fetch(PUBLIC_URL + "NoteBook/NewAccount", {
+                    method: "POST",
+                    body: formData,
+                    headers: {
+                      "Content-Type": "multipart/form-data",
+                    },
+                  });
+
+                  if (response.ok) {
+                    Toast.show({
+                      type: ALERT_TYPE.SUCCESS,
+                      title: 'Success',
+                      textBody: 'Congrats! Account created successfully!',
+                    });
+                  } else {
+                    Toast.show({
+                      type: ALERT_TYPE.DANGER,
+                      title: 'Warning',
+                      textBody: 'Something went wring!Account creation Fail!',
+                    });
+                  }
+                }}>
                 <Text style={styles.saveButtonText}>Save</Text>
               </Pressable>
             </View>
@@ -129,6 +206,8 @@ export default function SignUpScreen() {
     </AlertNotificationRoot>
 
   );
+
+
 }
 
 const styles = StyleSheet.create({
