@@ -1,44 +1,44 @@
 import React, { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
-import { AlertNotificationRoot } from 'react-native-alert-notification';
 
 export default function SignUpScreen() {
 
   return (
-    <AlertNotificationRoot>
-      <ScrollView style={styles.container} contentContainerStyle={styles.scrollcontent}>
-        <View style={styles.round}>
-          <Text style={styles.roundText}>Hello</Text>
-        </View>
-        <View style={styles.header}>
-          <Text style={styles.pageTitle}>NoteBook </Text>
-          <Text style={styles.subTitle}>Welcome Back! Please Sign In to Your Account</Text>
-        </View>
 
-        <View style={styles.form}>
+    <ScrollView style={styles.container} contentContainerStyle={styles.scrollcontent}>
+      <View style={styles.round}>
+        <Text style={styles.roundText}>Hello</Text>
+      </View>
+      <View style={styles.header}>
+        <Text style={styles.pageTitle}>NoteBook </Text>
+        <Text style={styles.subTitle}>Welcome Back! Please Sign In to Your Account</Text>
+      </View>
 
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Email</Text>
-            <TextInput placeholder='Enter Your Email' style={styles.input} keyboardType='email-address' />
-          </View>
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Password</Text>
-            <TextInput placeholder='Enter Your Password' style={styles.input} secureTextEntry />
-          </View>
-          <View style={styles.buttonContainer}>
-            <Pressable style={styles.loginButton}>
-              <Text style={styles.loginButtonText}>Login</Text>
-            </Pressable>
-          </View>
-          <View style={styles.buttonContainer}>
-            <Pressable style={styles.createAccountButton}>
-              <Text style={styles.createAccountButtonText}>Create Account</Text>
-            </Pressable>
-          </View>
+      <View style={styles.form}>
+
+        <View style={styles.inputContainer}>
+          <Text style={styles.label}>Email</Text>
+          <TextInput placeholder='Enter Your Email' style={styles.input} keyboardType='email-address' />
         </View>
+        <View style={styles.inputContainer}>
+          <Text style={styles.label}>Password</Text>
+          <TextInput placeholder='Enter Your Password' style={styles.input} secureTextEntry />
+        </View>
+        <View style={styles.buttonContainer}>
+          <Pressable style={styles.loginButton}>
+            <Text style={styles.loginButtonText}>Login</Text>
+          </Pressable>
+        </View>
+        <View style={styles.buttonContainer}>
+          <Pressable style={styles.createAccountButton}>
+            <Text style={styles.createAccountButtonText}>Create Account</Text>
+          </Pressable>
+        </View>
+      </View>
 
-      </ScrollView>
-    </AlertNotificationRoot>
+    </ScrollView>
+
+
   );
 }
 
@@ -111,11 +111,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderWidth: 2,
     borderColor: "#54a0ff",
-
+  
   },
 
   createAccountButtonText: {
-    color: "#54a0ff",
+    color:"#54a0ff",
     fontSize: 16,
     fontWeight: "bold"
   },
