@@ -5,7 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Picker } from '@react-native-picker/picker';
 import { ALERT_TYPE, AlertNotificationRoot, Dialog, Toast } from 'react-native-alert-notification';
 
-const PUBLIC_URL = "https://dc65f3995d2a.ngrok-free.app";
+const PUBLIC_URL = "https://246bcb2c22a6.ngrok-free.app";
 export default function SignUpScreen() {
 
   const [image, setImage] = useState<string | null>(null);
@@ -174,7 +174,7 @@ export default function SignUpScreen() {
                     } as any);
                   }
 
-                  const response = await fetch(PUBLIC_URL + "NoteBook/NewAccount", {
+                  const response = await fetch(PUBLIC_URL + "/NoteBook/NewAccount", {
                     method: "POST",
                     body: formData,
                     headers: {
