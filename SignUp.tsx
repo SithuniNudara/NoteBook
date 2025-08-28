@@ -5,7 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Picker } from '@react-native-picker/picker';
 import { ALERT_TYPE, AlertNotificationRoot, Dialog, Toast } from 'react-native-alert-notification';
 
-const PUBLIC_URL = "https://246bcb2c22a6.ngrok-free.app";
+const PUBLIC_URL = "https://94199826832f.ngrok-free.app";
 export default function SignUpScreen() {
 
   const [image, setImage] = useState<string | null>(null);
@@ -127,8 +127,8 @@ export default function SignUpScreen() {
                 <Picker
                   selectedValue={selectedCity}
                   style={styles.picker}
-                  onValueChange={(itemValue => setSelectedCity(itemValue))}>
-                  <Picker.Item label='Select Your City' value={""} />
+                  onValueChange={(itemValue) => setSelectedCity(itemValue)}>
+                  <Picker.Item label='Select Your City' value="" />
                   {getCities.map((city) => (
                     <Picker.Item key={city.id} label={city.name} value={city.id} />
                   ))}
@@ -170,7 +170,7 @@ export default function SignUpScreen() {
                     formData.append("profileImage", {
                       uri: image,
                       name: "profile.jpg",
-                      type:"image/jpg"
+                      type: "image/jpg"
                     } as any);
                   }
 
@@ -183,20 +183,32 @@ export default function SignUpScreen() {
                   });
 
                   if (response.ok) {
-                    Toast.show({
-                      type: ALERT_TYPE.SUCCESS,
-                      title: 'Success',
-                      textBody: 'Congrats! Account created successfully!',
-                    });
+                    const json = await response.json();
 
-                    setFullName("");
-                    setUserName("");
-                    setEmail("");
-                    setPassword("");
-                    setConfirmPassword("");
-                    setSelectedCity("");
-                    setImage("");
-                 
+                    if (json.status) {
+                      Toast.show({
+                        type: ALERT_TYPE.SUCCESS,
+                        title: 'Success',
+                        textBody: 'Congrats! Account created successfully!',
+                      });
+
+                      setFullName("");
+                      setUserName("");
+                      setEmail("");
+                      setPassword("");
+                      setConfirmPassword("");
+                      setSelectedCity("0");
+                      setImage("");
+                    }else{
+                      console.log("error");
+                      Toast.show({
+                      type: ALERT_TYPE.DANGER,
+                      title: 'Warning',
+                      textBody: json.message,
+                    });
+                    }
+
+
                   } else {
                     Toast.show({
                       type: ALERT_TYPE.DANGER,

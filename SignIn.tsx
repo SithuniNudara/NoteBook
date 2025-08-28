@@ -1,49 +1,139 @@
-import React, { useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import React, { useState } from "react";
+import {
+  KeyboardAvoidingView,
+  ScrollView,
+  View,
+  StyleSheet,
+  TextInput,
+  Pressable,
+  Text,
+} from "react-native";
+import {
+  ALERT_TYPE,
+  AlertNotificationRoot,
+  Toast,
+} from "react-native-alert-notification";
 
-export default function SignUpScreen() {
+const PUBLIC_URL = "https://94199826832f.ngrok-free.app";
+
+export default function SignInScreen() {
+  const [getEmail, setEmail] = useState("");
+  const [getPassword, setPassword] = useState("");
+
+  const handleLogin = async () => {
+    const loginDetails = {
+      email: getEmail,
+      password: getPassword,
+    };
+
+    try {
+      const response = await fetch(PUBLIC_URL + "/NoteBook/SignIn", {
+        method: "POST",
+        body: JSON.stringify(loginDetails),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.ok) {
+        const json = await response.json();
+        if (json.status) {
+          Toast.show({
+            type: ALERT_TYPE.SUCCESS,
+            title: "Success",
+            textBody: "Welcome!",
+          });
+          setEmail("");
+          setPassword("");
+        } else {
+          Toast.show({
+            type: ALERT_TYPE.WARNING,
+            title: "Warning",
+            textBody: json.message,
+          });
+        }
+      } else {
+        Toast.show({
+          type: ALERT_TYPE.DANGER,
+          title: "Error",
+          textBody: "Server Side Error!",
+        });
+      }
+    } catch (error) {
+      Toast.show({
+        type: ALERT_TYPE.DANGER,
+        title: "Error",
+        textBody: "Network Error!",
+      });
+    }
+  };
 
   return (
+    <KeyboardAvoidingView
+      behavior={"padding"}
+      keyboardVerticalOffset={40}
+      style={styles.container}
+    >
+      <AlertNotificationRoot>
+        <ScrollView style={styles.scrollcontent} contentContainerStyle={{ flexGrow: 1 }}>
+          {/* Round Circle */}
+          <View style={styles.round}>
+            <Text style={styles.roundText}>Hello</Text>
+          </View>
 
-    <ScrollView style={styles.container} contentContainerStyle={styles.scrollcontent}>
-      <View style={styles.round}>
-        <Text style={styles.roundText}>Hello</Text>
-      </View>
-      <View style={styles.header}>
-        <Text style={styles.pageTitle}>NoteBook </Text>
-        <Text style={styles.subTitle}>Welcome Back! Please Sign In to Your Account</Text>
-      </View>
+          {/* Header */}
+          <View style={styles.header}>
+            <Text style={styles.pageTitle}>NoteBook</Text>
+            <Text style={styles.subTitle}>
+              Welcome Back! Please Sign In to Your Account
+            </Text>
+          </View>
 
-      <View style={styles.form}>
+          {/* Form */}
+          <View style={styles.form}>
+            <View style={styles.inputContainer}>
+              <Text style={styles.label}>Email Address</Text>
+              <TextInput
+                placeholder="Enter Your Email"
+                style={styles.input}
+                keyboardType="email-address"
+                onChangeText={setEmail}
+                value={getEmail}
+              />
+            </View>
 
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Email</Text>
-          <TextInput placeholder='Enter Your Email' style={styles.input} keyboardType='email-address' />
-        </View>
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Password</Text>
-          <TextInput placeholder='Enter Your Password' style={styles.input} secureTextEntry />
-        </View>
-        <View style={styles.buttonContainer}>
-          <Pressable style={styles.loginButton}>
-            <Text style={styles.loginButtonText}>Login</Text>
-          </Pressable>
-        </View>
-        <View style={styles.buttonContainer}>
-          <Pressable style={styles.createAccountButton}>
-            <Text style={styles.createAccountButtonText}>Create Account</Text>
-          </Pressable>
-        </View>
-      </View>
+            <View style={styles.inputContainer}>
+              <Text style={styles.label}>Password</Text>
+              <TextInput
+                placeholder="Enter Your Password"
+                style={styles.input}
+                secureTextEntry
+                onChangeText={setPassword}
+                value={getPassword}
+              />
+            </View>
 
-    </ScrollView>
+            {/* Login Button */}
+            <View style={styles.buttonContainer}>
+              <Pressable style={styles.loginButton} onPress={handleLogin}>
+                <Text style={styles.loginButtonText}>Login</Text>
+              </Pressable>
+            </View>
 
-
+            {/* Create Account Button */}
+            <View style={styles.buttonContainer}>
+              <Pressable style={styles.createAccountButton}>
+                <Text style={styles.createAccountButtonText}>Create Account</Text>
+              </Pressable>
+            </View>
+          </View>
+        </ScrollView>
+      </AlertNotificationRoot>
+    </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
-
   container: {
     flex: 1,
     backgroundColor: "#eee",
@@ -69,12 +159,11 @@ const styles = StyleSheet.create({
   subTitle: {
     fontSize: 16,
     color: "#666666",
-    textAlign: "center"
+    textAlign: "center",
   },
 
   form: {
     flex: 1,
-
   },
 
   inputContainer: {
@@ -83,9 +172,9 @@ const styles = StyleSheet.create({
 
   label: {
     fontSize: 16,
-    fontWeight: 600,
+    fontWeight: "600",
     color: "#000",
-    marginBottom: 8
+    marginBottom: 8,
   },
 
   input: {
@@ -111,13 +200,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderWidth: 2,
     borderColor: "#54a0ff",
-  
   },
 
   createAccountButtonText: {
-    color:"#54a0ff",
+    color: "#54a0ff",
     fontSize: 16,
-    fontWeight: "bold"
+    fontWeight: "bold",
   },
 
   loginButton: {
@@ -127,13 +215,13 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     alignItems: "center",
     borderWidth: 2,
-    borderColor: "#54a0ff"
+    borderColor: "#54a0ff",
   },
 
   loginButtonText: {
     color: "#fff",
     fontSize: 16,
-    fontWeight: "bold"
+    fontWeight: "bold",
   },
 
   round: {
@@ -145,16 +233,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderWidth: 2,
     borderColor: "#069ef1ff",
-    marginBottom: 20,    // space between circle and title
-    alignSelf: "center", // center circle
+    marginBottom: 20,
+    alignSelf: "center",
   },
 
   roundText: {
     color: "#fff",
     fontSize: 20,
-    fontWeight: "600",   // must be a string
+    fontWeight: "600",
     textAlign: "center",
   },
-
-
 });
